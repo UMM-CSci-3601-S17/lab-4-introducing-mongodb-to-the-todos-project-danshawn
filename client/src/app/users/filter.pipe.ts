@@ -53,7 +53,7 @@ export class FilterBy implements PipeTransform {
     }
   }
 
-    transform(array: any[], filter: string): any {
+    transform(array: any[], filter: any): any {
         if(array==null){
             return null;
         }

@@ -7,15 +7,16 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
 import com.mongodb.util.JSON;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
+
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -40,15 +41,52 @@ public class TodoController {
 
     // List todos
     public String listTodos(Map<String, String[]> queryParams) {
-        Document filterDoc = new Document();
+
+        List<Bson> gds = new ArrayList<Bson>();
 
         if (queryParams.containsKey("owner")) {
-            int targetAge = Integer.parseInt(queryParams.get("owner")[0]);
-            filterDoc = filterDoc.append("owner", targetAge);
+            String targetAge = (queryParams.get("owner")[0]);
+            gds.add(Aggregates.match(eq("owner", targetAge)));
         }
 
-        FindIterable<Document> matchingTodos = todoCollection.find(filterDoc);
 
+        if (queryParams.containsKey("category")) {
+                String targetAge = (queryParams.get("category")[0]);
+                gds.add(Aggregates.match(eq("category", targetAge)));
+        }
+        if (queryParams.containsKey("body")) {
+            String targetAge = (queryParams.get("body")[0]);
+            gds.add(Aggregates.match(Filters.regex("body",targetAge)));
+        }
+
+        if (queryParams.containsKey("status")) {
+            try {
+                boolean status = Boolean.parseBoolean(queryParams.get("status")[0]);
+                gds.add(Aggregates.match(eq("status", status)));
+            }
+            catch(NumberFormatException nfe)
+            {
+                nfe.printStackTrace();
+            }
+        }
+
+        if (queryParams.containsKey("orderBy")) {
+            String sortType = (queryParams.get("orderBy")[0]);
+            gds.add(Aggregates.sort(Filters.eq(sortType,1))); //1 is Ascending, -1 is Descending
+        }
+
+        if (queryParams.containsKey("limit")) {
+            try {
+                int limit = Integer.parseInt(queryParams.get("limit")[0]);
+                if(limit > 0) {
+                    gds.add(Aggregates.limit(limit)); //1 is Ascending, -1 is Descending
+                }
+            }catch(NumberFormatException nfe){
+                nfe.printStackTrace();
+            }
+        }
+
+        AggregateIterable<Document> matchingTodos = todoCollection.aggregate(gds);
         return JSON.serialize(matchingTodos);
     }
 

@@ -1,82 +1,82 @@
 import { ComponentFixture, TestBed, async } from "@angular/core/testing";
-import { User } from "./user";
-import { UserListComponent } from "./user-list.component";
-import { UserListService } from "./user-list.service";
+import { Todo } from "./todo";
+import { TodoListComponent } from "./todo-list.component";
+import { TodoListService } from "./todo-list.service";
 import { Observable } from "rxjs";
 import { PipeModule } from "../../pipe.module";
 
-describe("User list", () => {
+describe("Todo list", () => {
 
-    let userList: UserListComponent;
-    let fixture: ComponentFixture<UserListComponent>;
+    let todoList: TodoListComponent;
+    let fixture: ComponentFixture<TodoListComponent>;
 
-    let userListServiceStub: {
-        getUsers: () => Observable<User[]>
+    let todoListServiceStub: {
+        getTodos: () => Observable<Todo[]>
     };
 
     beforeEach(() => {
-        // stub UserService for test purposes
-        userListServiceStub = {
-            getUsers: () => Observable.of([
+        // stub TodoService for test purposes
+        todoListServiceStub = {
+            getTodos: () => Observable.of([
                 {
-                    id: "chris_id",
-                    name: "Chris",
-                    age: 25,
-                    company: "UMM",
-                    email: "chris@this.that"
+                    id: "1234",
+                    owner: "Blanche",
+                    status: true,
+                    body: "dfds fdfsdfdsfds",
+                    category: "homework"
                 },
                 {
-                    id: "pat_id",
-                    name: "Pat",
-                    age: 37,
-                    company: "IBM",
-                    email: "pat@something.com"
+                    id: "2354",
+                    owner: "Fry",
+                    status: false,
+                    body: "ghdfasij dhsfkjdashfkj",
+                    category: "software design"
                 },
                 {
-                    id: "jamie_id",
-                    name: "Jamie",
-                    age: 37,
-                    company: "Frogs, Inc.",
-                    email: "jamie@frogs.com"
+                    id: "3456",
+                    owner: "Blanche",
+                    status: true,
+                    body: "asdhfkjhds kjausdhfkjdhas",
+                    category: "video games"
                 }
-                ])
+            ])
         };
 
         TestBed.configureTestingModule({
             imports: [PipeModule],
-            declarations: [ UserListComponent ],
-            // providers:    [ UserListService ]  // NO! Don't provide the real service!
+            declarations: [ TodoListComponent ],
+            // providers:    [ TodoListService ]  // NO! Don't provide the real service!
             // Provide a test-double instead
-            providers:    [ { provide: UserListService, useValue: userListServiceStub } ]
+            providers:    [ { provide: TodoListService, useValue: todoListServiceStub } ]
         })
     });
 
     beforeEach(async(() => {
         TestBed.compileComponents().then(() => {
-            fixture = TestBed.createComponent(UserListComponent);
-            userList = fixture.componentInstance;
+            fixture = TestBed.createComponent(TodoListComponent);
+            todoList = fixture.componentInstance;
             fixture.detectChanges();
         });
     }));
 
-    it("contains all the users", () => {
-        expect(userList.users.length).toBe(3);
+    it("contains all the todos", () => {
+        expect(todoList.todos.length).toBe(3);
     });
 
-    it("contains a user named 'Chris'", () => {
-        expect(userList.users.some((user: User) => user.name === "Chris" )).toBe(true);
+    it("contains a todo with owner 'Blanche'", () => {
+        expect(todoList.todos.some((todo: Todo) => todo.owner === "Blanche" )).toBe(true);
     });
 
-    it("contain a user named 'Jamie'", () => {
-        expect(userList.users.some((user: User) => user.name === "Jamie" )).toBe(true);
+    it("contain a todo with owner 'Fry'", () => {
+        expect(todoList.todos.some((todo: Todo) => todo.owner === "Fry" )).toBe(true);
     });
 
-    it("doesn't contain a user named 'Santa'", () => {
-        expect(userList.users.some((user: User) => user.name === "Santa" )).toBe(false);
+    it("doesn't contain a todo with owner 'Santa'", () => {
+        expect(todoList.todos.some((todo: Todo) => todo.owner === "Santa" )).toBe(false);
     });
 
-    it("has two users that are 37 years old", () => {
-        expect(userList.users.filter((user: User) => user.age === 37).length).toBe(2);
+    it("has 2 todos that has a 'complete' status", () => {
+        expect(todoList.todos.filter((todo: Todo) => todo.status === true).length).toBe(2);
     });
 
 });

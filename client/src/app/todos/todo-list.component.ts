@@ -1,24 +1,24 @@
 import { Component, OnInit } from '@angular/core';
-import { UserListService } from "./user-list.service";
-import { User } from "./user";
+import { TodoListService } from "./todo-list.service";
+import { Todo } from "./todo";
 import { FilterBy } from "./filter.pipe";
 
 @Component({
-    selector: 'user-list-component',
-    templateUrl: 'user-list.component.html',
+    selector: 'todo-list-component',
+    templateUrl: 'todo-list.component.html',
     providers: [ FilterBy ]
 })
 
-export class UserListComponent implements OnInit {
-    public users: User[];
+export class TodoListComponent implements OnInit {
+    public todos: Todo[];
 
-    constructor(private userListService: UserListService) {
-        // this.users = this.userListService.getUsers();
+    constructor(private todoListService: TodoListService) {
+        // this.todos = this.todoListService.getTodos();
     }
 
     ngOnInit(): void {
-        this.userListService.getUsers().subscribe(
-            users => this.users = users,
+        this.todoListService.getTodos().subscribe(
+            todos => this.todos = todos,
             err => {
                 console.log(err);
             }

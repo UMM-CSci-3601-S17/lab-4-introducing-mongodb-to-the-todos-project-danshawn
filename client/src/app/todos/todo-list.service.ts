@@ -1,18 +1,19 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import { Http } from '@angular/http';
-import { User } from './user';
-import { Observable } from "rxjs";
+import { Todo } from './todo';
+import {Observable} from "rxjs";
 
 @Injectable()
-export class UserListService {
-    private userUrl: string = API_URL + "users";
+export class TodoListService {
+    private baseUrl: string = API_URL;
     constructor(private http:Http) { }
 
-    getUsers(): Observable<User[]> {
-        return this.http.request(this.userUrl).map(res => res.json());
+    getTodos(): Observable<Todo[]> {
+        let body = this.http.request(this.baseUrl + 'todos').map(res => res.json());
+        return body;
     }
 
-    getUserById(id: string): Observable<User> {
-        return this.http.request(this.userUrl + "/" + id).map(res => res.json());
+    getTodoById(id: string): Observable<Todo> {
+        return this.http.request(this.baseUrl + "/" + id).map(res => res.json());
     }
 }

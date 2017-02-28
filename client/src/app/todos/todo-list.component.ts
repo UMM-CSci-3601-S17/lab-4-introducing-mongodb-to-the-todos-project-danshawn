@@ -13,6 +13,8 @@ export class TodoListComponent implements OnInit {
     public todos: Todo[];
     public progress1 : string;
 
+    //Must have these defined to nullstring so that
+    //they aren't "undefined"
     public filterOwner : string = "";
     public filterCategory : string = "";
     public filterBody : string = "";
@@ -61,9 +63,6 @@ export class TodoListComponent implements OnInit {
             parameters += prefix + param + "=" + param_map[param]; //Construct ?owner=Name&limit=3 etc.
             prefix = "&";
         }
-
-        console.log("LOG!");
-        console.log(parameters);
         return parameters;
     }
 

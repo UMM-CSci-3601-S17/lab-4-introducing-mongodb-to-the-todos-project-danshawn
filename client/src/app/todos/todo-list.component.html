@@ -46,7 +46,7 @@
     <li *ngFor="let todo of todos" class="list-group-item">
         Owner:  <strong>{{ todo.owner }}</strong><br>
         Status: <strong>{{ todo.status }}</strong><br>
-        Category: <strong>{{ todo.category }}</strong><br>
+        Category: <span class="label label-primary">{{ todo.category }}</span><br>
         Body: {{ todo.body }}
 
     </li>

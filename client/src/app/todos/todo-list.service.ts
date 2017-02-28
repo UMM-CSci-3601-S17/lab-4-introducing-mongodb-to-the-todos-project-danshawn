@@ -13,6 +13,11 @@ export class TodoListService {
         return body;
     }
 
+    getFilteredTodos(parameters : string): Observable<Todo[]> {
+        let body = this.http.request(this.baseUrl + 'todos' + parameters).map(res => res.json());
+        return body;
+    }
+
     getTodoById(id: string): Observable<Todo> {
         return this.http.request(this.baseUrl + "/" + id).map(res => res.json());
     }

@@ -1,23 +1,53 @@
 <ul class="list-group">
     <li class="list-group-item list-group-item-info">
-        <input #input type="text" placeholder="ID" (input)="search0 = $event.target.value">
-        <input #input type="text" placeholder="Owner" (input)="search = $event.target.value">
-        <input #input type="text" placeholder="Category" (input)="search1 = $event.target.value">
-        <input #input type="text" placeholder="Body" (input)="search2 = $event.target.value">
-        <select  (input)="search3 = $event.target.value">
-            <option value= ""  >Choose status</option>
+        <input #input type="text" placeholder="Owner" (input)="filterOwner = $event.target.value">
+        <input #input type="text" placeholder="Category" (input)="filterCategory = $event.target.value">
+        <input #input type="text" placeholder="Body" (input)="filterBody = $event.target.value">
+        <select  (input)="filterStatus = $event.target.value">
+            <option value= "" default >Choose status</option>
             <option value = "1">Complete</option>
             <option value = "0">Incomplete</option>
         </select>
-
+        <select  (input)="sortBy = $event.target.value">
+            <option value= ""  >Not sorted</option>
+            <option value = "owner">By Owner</option>
+            <option value = "category">By Category</option>
+            <option value = "status">By Not Completed</option>
+            <option value = "body">By Body</option>
+        </select>
     </li>
+    <div class="alert alert-info" role="alert" (click)="doRequest(filterOwner, filterCategory, filterStatus, filterBody, sortBy)">
+        <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+        <a class="alert-link"  >Click to Request Data</a>
+        <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"></span>
+    </div>
+    <div class="progress">
+        <div class="progress-bar progress-bar-success progress-bar-striped" id="progress_bar1" role="progressbar" style="width: 50%">
+            <span class="sr-only">60% Complete</span>
+        </div>
+    </div>
+    <div class="progress">
+        <div class="progress-bar progress-bar-info progress-bar-striped" id="progress_bar2" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+            <span class="sr-only">45% Complete</span>
+            <a class="alert-link" (click)="doRequest(filterOwner, filterCategory, filterStatus, filterBody, sortBy)" ><strong>Click to Request Data</strong>></a>
+        </div>
+    </div>
+    <div class="progress">
+        <div class="progress-bar progress-bar-warning progress-bar-striped" id="progress_bar3" role="progressbar" style="width: 50%">
+            <span class="sr-only">60% Complete</span>
+        </div>
+    </div>
+    <div class="progress">
+        <div class="progress-bar progress-bar-danger progress-bar-striped" id="progress_bar4" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 45%">
+            <span class="sr-only">45% Complete</span>
+        </div>
+    </div>
     <li class="list-group-item list-group-item-info">Todo</li>
-    <li *ngFor="let todo of todos |filterBy: {_id: search0} |filterBy: {owner: search} | filterBy: {category: search1 }| filterBy: {body: search2 } | filterBy: {status: search3 }" class="list-group-item">
-        <u>Id</u>:  {{ todo._id }}<br>
-        <u>Owner</u>:  {{ todo.owner }}<br>
-        <u>Status</u>: {{ todo.status }}<br>
-        <u>Category</u>: {{ todo.category }}<br>
-        <u>Body</u>: {{ todo.body }}
+    <li *ngFor="let todo of todos" class="list-group-item">
+        Owner:  <strong>{{ todo.owner }}</strong><br>
+        Status: <strong>{{ todo.status }}</strong><br>
+        Category: <strong>{{ todo.category }}</strong><br>
+        Body: {{ todo.body }}
 
     </li>
 </ul>

@@ -20,7 +20,7 @@ export class TodoListComponent implements OnInit {
     public filterBody : string = "";
     public filterStatus : string = "";
     public sortBy : string = "";
-
+    private freakingOut : boolean = false;
 
 
     constructor(private todoListService: TodoListService) {
@@ -35,7 +35,7 @@ export class TodoListComponent implements OnInit {
             }
         );*/
 
-        setInterval(this.freakout, 500);
+
 
     }
 
@@ -77,6 +77,14 @@ export class TodoListComponent implements OnInit {
         );
     }
 
+    public startFreakingOut(): void
+    {
+        if (!this.freakingOut) {
+            setInterval(this.freakout, 500);
+            this.freakingOut = true;
+        }
+    }
+
     public freakout(): void {
         var progress_bar1 : Element = document.getElementById("progress_bar1");
         var progress_bar2 : Element = document.getElementById("progress_bar2");
@@ -89,10 +97,5 @@ export class TodoListComponent implements OnInit {
         progress_bar3.setAttribute("style", "width: " + Math.random()*100 + "%");
         progress_bar4.setAttribute("style", "width: " + Math.random()*100 + "%");
     }
-
-    foo(): void{
-        alert('wHAADSFD');
-    }
-
 }
 

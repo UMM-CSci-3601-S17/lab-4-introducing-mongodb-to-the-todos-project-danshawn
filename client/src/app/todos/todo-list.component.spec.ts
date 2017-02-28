@@ -15,7 +15,7 @@ describe("Todo list", () => {
     };
 
     beforeEach(() => {
-        // stub TodoService for test purposes
+        // stub TodoService for test purposesfixture.detectChanges();
         todoListServiceStub = {
             getTodos: () => Observable.of([
                 {
@@ -55,9 +55,27 @@ describe("Todo list", () => {
         TestBed.compileComponents().then(() => {
             fixture = TestBed.createComponent(TodoListComponent);
             todoList = fixture.componentInstance;
-            fixture.detectChanges();
+            //Get Data from the Stub
+            todoListServiceStub.getTodos().subscribe(
+                todos => {
+                    todoList.todos = todos;
+                    fixture.detectChanges();
+                },
+                err => {
+                    console.log(err);
+                }
+            );
         });
+
     }));
+
+    it("todoList should not be null", () => {
+        expect(todoList).not.toBe(null);
+    });
+
+    it("todoList.todos should not be null", () => {
+        expect(todoList.todos).not.toBe(null);
+    });
 
     it("contains all the todos", () => {
         expect(todoList.todos.length).toBe(3);

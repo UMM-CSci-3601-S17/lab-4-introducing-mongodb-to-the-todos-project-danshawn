@@ -4,12 +4,12 @@
         <input #input type="text" placeholder="Category" (input)="filterCategory = $event.target.value">
         <input #input type="text" placeholder="Body" (input)="filterBody = $event.target.value">
         <select  (input)="filterStatus = $event.target.value">
-            <option value= "" default >Choose status</option>
+            <option value= "">Choose status</option>
             <option value = "1">Complete</option>
             <option value = "0">Incomplete</option>
         </select>
         <select  (input)="sortBy = $event.target.value">
-            <option value= ""  >Not sorted</option>
+            <option value= "">Not sorted</option>
             <option value = "owner">By Owner</option>
             <option value = "category">By Category</option>
             <option value = "status">By Not Completed</option>

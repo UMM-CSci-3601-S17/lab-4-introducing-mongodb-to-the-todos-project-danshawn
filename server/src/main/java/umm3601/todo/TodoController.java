@@ -1,15 +1,16 @@
 package umm3601.todo;
 
+import com.google.gson.Gson;
+import com.mongodb.AggregationOutput;
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
-import com.mongodb.client.AggregateIterable;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
 import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Sorts;
 import com.mongodb.util.JSON;
+import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -111,6 +112,71 @@ public class TodoController {
         else
             return null;
     }
+
+    public Document getSummaryCategories()
+    {
+        Document output = new Document();
+        Document filter = new Document();
+        DistinctIterable<String> categories = todoCollection.distinct("category", filter, String.class);
+        for(String s : categories)
+        {
+            filter = new Document();
+            filter.append("category",s);
+            float entries = todoCollection.count(filter);
+            filter.append("status", true);
+            long finished = todoCollection.count(filter);
+            output.append(s, finished/entries);
+        }
+        return output;
+    }
+
+    public Document getSummaryOwners()
+    {
+        Document output = new Document();
+        Document filter = new Document();
+        DistinctIterable<String> categories = todoCollection.distinct("owner", filter, String.class);
+        for(String s : categories)
+        {
+            filter = new Document();
+            filter.append("owner",s);
+            float entries = todoCollection.count(filter);
+            filter.append("status", true);
+            long finished = todoCollection.count(filter);
+            output.append(s, finished/entries);
+        }
+        return output;
+    }
+
+
+    // List todos
+    public String getSummary() {
+        Document output = new Document();
+
+        Document filter;
+        float cntEntries;
+        long cntFinished;
+
+        //Get count of all entries
+        cntEntries = todoCollection.count();
+
+        //Get Count of all Completed Tasks
+        filter = new Document();
+        filter.append("status", true); // TODO needs testing, confirmation
+        cntFinished = todoCollection.count(filter);
+        output.append("percentToDosComplete: ", (cntFinished/(float)cntEntries));
+        output.append("categoriesPercentComplete: ", getSummaryCategories());
+        output.append("ownersPercentComplete: ", getSummaryOwners());
+
+        long poj = todoCollection.count(Filters.regex("body","Lorem"));
+        output.append("percentBodiesContain\"Lorem\"", poj /cntEntries);
+
+        long extreme = todoCollection.count(Filters.and(Filters.regex("body","Lorem"),(Filters.eq("status",true))));
+
+        output.append("percentBodiesContain\"Lorem\"Finished", extreme /(float)poj);
+        return JSON.serialize(output);
+    }
+
+
 
     // Get the average age of all todos by company
 //    public String getAverageAgeByCompany() {

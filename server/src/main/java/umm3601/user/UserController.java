@@ -58,12 +58,7 @@ public class UserController {
                 = userCollection
                     .find(eq("_id", new ObjectId(id)));
 
-//        Document jsonUser
-//                = userCollection
-//                .find(eq("_id", new ObjectId(id))).first();
-//        if(jsonUser != null)
-//            return jsonUser.toJson();
-//        return null;
+
         Iterator<Document> iterator = jsonUsers.iterator();
         if(iterator.hasNext()) {
             Document user = iterator.next();

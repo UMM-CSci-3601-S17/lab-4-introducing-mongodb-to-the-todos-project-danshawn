@@ -63,6 +63,11 @@ public class Server {
             String id = req.params("id");
             return todoController.getTodo(id);
         });
+        // See specific todo
+        get("api/todoSummary", (req, res) -> {
+            res.type("application/json");
+            return todoController.getSummary();
+        });
 
         // Get average ages by company
         get("api/avgUserAgeByCompany", (req, res) -> {

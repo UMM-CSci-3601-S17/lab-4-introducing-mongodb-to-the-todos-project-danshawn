@@ -42,27 +42,27 @@ public class TodoController {
     // List todos
     public String listTodos(Map<String, String[]> queryParams) {
 
-        List<Bson> gds = new ArrayList<Bson>();
+        List<Bson> aggregateParams = new ArrayList<Bson>();
 
         if (queryParams.containsKey("owner")) {
             String targetAge = (queryParams.get("owner")[0]);
-            gds.add(Aggregates.match(eq("owner", targetAge)));
+            aggregateParams.add(Aggregates.match(eq("owner", targetAge)));
         }
 
 
         if (queryParams.containsKey("category")) {
                 String targetAge = (queryParams.get("category")[0]);
-                gds.add(Aggregates.match(eq("category", targetAge)));
+                aggregateParams.add(Aggregates.match(eq("category", targetAge)));
         }
         if (queryParams.containsKey("body")) {
             String targetAge = (queryParams.get("body")[0]);
-            gds.add(Aggregates.match(Filters.regex("body",targetAge)));
+            aggregateParams.add(Aggregates.match(Filters.regex("body",targetAge)));
         }
 
         if (queryParams.containsKey("status")) {
             try {
                 boolean status = Boolean.parseBoolean(queryParams.get("status")[0]);
-                gds.add(Aggregates.match(eq("status", status)));
+                aggregateParams.add(Aggregates.match(eq("status", status)));
             }
             catch(NumberFormatException nfe)
             {
@@ -72,21 +72,21 @@ public class TodoController {
 
         if (queryParams.containsKey("orderBy")) {
             String sortType = (queryParams.get("orderBy")[0]);
-            gds.add(Aggregates.sort(Filters.eq(sortType,1))); //1 is Ascending, -1 is Descending
+            aggregateParams.add(Aggregates.sort(Filters.eq(sortType,1))); //1 is Ascending, -1 is Descending
         }
 
         if (queryParams.containsKey("limit")) {
             try {
                 int limit = Integer.parseInt(queryParams.get("limit")[0]);
                 if(limit > 0) {
-                    gds.add(Aggregates.limit(limit)); //1 is Ascending, -1 is Descending
+                    aggregateParams.add(Aggregates.limit(limit)); //1 is Ascending, -1 is Descending
                 }
             }catch(NumberFormatException nfe){
                 nfe.printStackTrace();
             }
         }
 
-        AggregateIterable<Document> matchingTodos = todoCollection.aggregate(gds);
+        AggregateIterable<Document> matchingTodos = todoCollection.aggregate(aggregateParams);
         return JSON.serialize(matchingTodos);
     }
 
